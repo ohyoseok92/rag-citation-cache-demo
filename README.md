@@ -4,6 +4,12 @@ This original, synthetic example reproduces a citation correctness bug. An answe
 
 There is no LLM call or external document. The “answer generator” picks the document with the most question-word overlap and quotes its full text. It exists to make cache behavior reproducible, not to demonstrate answer quality or retrieval performance.
 
+## Interactive browser walkthrough
+
+The complete source for the [public walkthrough](https://rag-citation-lab-oh6428.oh6428.chatgpt.site/) is in [`web-demo/`](web-demo/). It is also shown in the [Wishket portfolio](https://www.wishket.com/partners/p/ohyoseok92/portfolio/322743). The page steps through the same synthetic 30-to-45-day document edit, then compares the stale naive-cache answer with the fresh versioned-cache answer.
+
+The browser page uses a local JavaScript cache and Web Crypto SHA-256 to explain the behavior. It does not call this Python API, Dragonfly, or an LLM. See [`web-demo/README.md`](web-demo/README.md) for local preview instructions and the portfolio screenshots.
+
 ## Run locally
 
 1. Start Dragonfly, following its [official Windows Docker guidance](https://www.dragonflydb.io/docs/getting-started/docker):

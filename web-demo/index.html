@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102c3a">
+  <meta name="description" content="문서 수정 뒤 오래된 RAG 인용이 남는 원인과 소스 버전 기반 캐시 키의 차이를 단계별로 확인하는 합성 데이터 데모입니다.">
+  <title>RAG 인용 정확성 실험실</title>
+  <link rel="stylesheet" href="./style.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#experiment">실험으로 이동</a>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="RAG 인용 정확성 실험실 처음으로"><span class="brand-mark">R<span class="mark-dot">.</span></span><span>RAG CITATION LAB</span></a>
+    <nav aria-label="주 메뉴"><a href="#experiment">실험</a><a href="#method">구현 원리</a><a href="https://github.com/ohyoseok92/rag-citation-cache-demo" target="_blank" rel="noopener noreferrer">원본 코드 ↗</a></nav>
+  </header>
+
+  <main id="top">
+    <section class="hero wrap" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="eyebrow-line"></span> INTERACTIVE CASE STUDY / 01</p>
+        <h1 id="hero-title">문서가 바뀌었는데<br><em>답변은 그대로라면?</em></h1>
+        <p class="hero-description">검색 결과를 인용하는 답변도 캐시 때문에 오래된 정보를 보여줄 수 있습니다. 문서 수정 전후에 같은 질문을 던져 두 캐시 방식의 차이를 확인해 보세요.</p>
+        <div class="hero-actions"><a class="button primary" href="#experiment">실험 시작하기 <span aria-hidden="true">↘</span></a><span class="hero-note">합성 문서 · 브라우저 내 재현 · 로그인 없음</span></div>
+      </div>
+      <div class="hero-visual" aria-label="30일 정책 문서가 45일로 수정되는 개념도">
+        <div class="visual-top"><span>DOCUMENT REVISION</span><span class="pulse"></span></div>
+        <div class="document-sheet old-sheet"><span class="sheet-label">SOURCE / v1</span><span class="sheet-big">30<span>days</span></span><span class="sheet-caption">Harbor permits expire after 30 days.</span></div>
+        <div class="arrow-disc" aria-hidden="true">→</div>
+        <div class="document-sheet new-sheet"><span class="sheet-label">SOURCE / v2</span><span class="sheet-big">45<span>days</span></span><span class="sheet-caption">Harbor permits expire after 45 days.</span></div>
+        <div class="visual-bottom"><span>같은 질문</span><span>다른 출처 버전</span></div>
+      </div>
+    </section>
+
+    <section class="summary-strip" aria-label="핵심 흐름"><div class="wrap summary-grid"><div><strong>01</strong><span>답변 저장</span></div><div><strong>02</strong><span>원문 변경</span></div><div><strong>03</strong><span>같은 질문 재조회</span></div><div><strong>04</strong><span>인용 유효성 비교</span></div></div></section>
+
+    <section id="experiment" class="experiment wrap" aria-labelledby="experiment-title">
+      <div class="section-heading"><div><p class="eyebrow dark">THE EXPERIMENT</p><h2 id="experiment-title">한 번의 문서 수정,<br>두 개의 답변</h2></div><p>아래 단계를 진행하면 캐시 키가 문서 버전을 반영하는지에 따라 결과가 갈립니다.</p></div>
+      <div class="lab-shell">
+        <div class="lab-topbar"><div class="window-dots" aria-hidden="true"><i></i><i></i><i></i></div><span>RAG CACHE SIMULATOR</span><span id="stepBadge" class="step-badge">STEP 0 / 3</span></div>
+        <div class="lab-body">
+          <ol class="steps" aria-label="실험 진행 단계"><li id="stepOne"><span>01</span>답변 캐시</li><li id="stepTwo"><span>02</span>원문 수정</li><li id="stepThree"><span>03</span>다시 질문</li></ol>
+          <div class="source-panel"><div><span class="panel-label">SOURCE DOCUMENT</span><h3>항만 허가 정책 <span class="doc-id">harbor-policy</span></h3></div><span id="sourceVersion" class="version-tag">v1 · 원문</span><p id="sourceText" class="source-quote">“Harbor permits expire after <strong>30 days.</strong>”</p><div class="source-meta"><span>문서 버전 SHA-256</span><code id="sourceHash">계산 중…</code></div></div>
+          <div class="query-row"><span class="query-icon" aria-hidden="true">?</span><div><span class="panel-label">SAME QUESTION, BOTH METHODS</span><strong>When do harbor permits expire?</strong></div></div>
+          <div class="comparison" aria-label="캐시 방식별 결과 비교">
+            <article id="naiveCard" class="result-card naive"><div class="card-head"><span class="mode-icon" aria-hidden="true">N</span><div><span class="panel-label">NAIVE CACHE</span><h3>질문만 기억하는 캐시</h3></div><span id="naiveState" class="state-tag neutral">대기 중</span></div><p id="naiveAnswer" class="answer">실험을 시작하면 답변이 여기에 표시됩니다.</p><div class="card-facts"><div><span>캐시</span><strong id="naiveHit">—</strong></div><div><span>현재 원문과 일치</span><strong id="naiveValid">—</strong></div></div><div class="key-preview"><span>KEY</span><code id="naiveKey">question hash</code></div></article>
+            <article id="versionedCard" class="result-card versioned"><div class="card-head"><span class="mode-icon" aria-hidden="true">V</span><div><span class="panel-label">VERSIONED CACHE</span><h3>원문 버전도 기억하는 캐시</h3></div><span id="versionedState" class="state-tag neutral">대기 중</span></div><p id="versionedAnswer" class="answer">실험을 시작하면 답변이 여기에 표시됩니다.</p><div class="card-facts"><div><span>캐시</span><strong id="versionedHit">—</strong></div><div><span>현재 원문과 일치</span><strong id="versionedValid">—</strong></div></div><div class="key-preview"><span>KEY</span><code id="versionedKey">source version + question hash</code></div></article>
+          </div>
+          <div class="control-row"><div id="statusText" class="status-text" aria-live="polite">첫 답변을 저장해 두 캐시의 출발점을 맞춥니다.</div><div class="control-buttons"><button id="resetButton" type="button" class="button secondary" disabled>초기화</button><button id="nextButton" type="button" class="button primary">1. 답변 캐시에 저장 <span aria-hidden="true">→</span></button></div></div>
+        </div>
+      </div>
+      <p class="lab-disclaimer">이 화면은 원본 Python 프로젝트의 캐시 키·인용 판정 규칙을 브라우저에서 재현한 설명용 시뮬레이션입니다. 공개 화면은 Dragonfly 서버에 연결되지 않습니다.</p>
+    </section>
+
+    <section id="method" class="method-section" aria-labelledby="method-title"><div class="wrap method-grid"><div class="method-copy"><p class="eyebrow">UNDER THE HOOD</p><h2 id="method-title">차이는 캐시 키에<br>원문의 버전을<br>넣는가에 있습니다.</h2><p>기존 방식은 같은 질문이면 이전 답변을 다시 꺼냅니다. 개선 방식은 전체 원문 묶음의 SHA-256 해시가 달라질 때 새 키를 사용해 답변과 인용을 다시 만듭니다.</p><a class="text-link" href="https://github.com/ohyoseok92/rag-citation-cache-demo/blob/main/src/core.py" target="_blank" rel="noopener noreferrer">Python 구현 확인하기 <span aria-hidden="true">↗</span></a></div><div class="method-code"><div class="code-header"><span>cache_key(question, mode, source_version)</span><span>PYTHON</span></div><pre><code><span class="comment"># 원본 core.py의 캐시 키 구성</span>
+version_part = snapshot_version if mode == "versioned" else "unversioned"
+key = f"{mode}:{generator}:{version_part}:{question_hash}"</code></pre><div class="code-footer"><span class="check-icon">✓</span> 인용 문구가 현재 원문에 포함되는지도 검사</div></div></div></section>
+
+    <section class="evidence wrap"><div><p class="eyebrow dark">WHAT WAS VERIFIED</p><h2>시연의 근거와 범위</h2></div><div class="evidence-grid"><div><span class="evidence-number">01 / CODE</span><h3>공개된 원본 코드</h3><p>FastAPI와 Dragonfly를 사용하는 합성 데이터 예제입니다. 문서 스냅샷 해시, 두 캐시 키, 인용 유효성 판정을 구현했습니다.</p><a href="https://github.com/ohyoseok92/rag-citation-cache-demo" target="_blank" rel="noopener noreferrer">저장소 보기 ↗</a></div><div><span class="evidence-number">02 / TEST</span><h3>로컬 실서버 검증</h3><p>원본 저장소의 기록에 따르면 Dragonfly df-v2.0.0에서 문서 수정 전후의 캐시 적중과 인용 유효성을 확인했습니다. 공개 화면은 이를 단계별로 보여줍니다.</p><a href="https://github.com/ohyoseok92/rag-citation-cache-demo#test-without-a-server" target="_blank" rel="noopener noreferrer">검증 방법 보기 ↗</a></div><div><span class="evidence-number">03 / LIMIT</span><h3>의도적인 범위 제한</h3><p>실제 LLM 호출, 외부 문서, 검색 품질 평가는 포함하지 않습니다. 원본의 문서 수정 API는 로컬 시연용이며 인증과 동시 작성자 제어가 없습니다.</p><a href="https://github.com/ohyoseok92/rag-citation-cache-demo#how-the-cache-stays-tied-to-its-source" target="_blank" rel="noopener noreferrer">구현 범위 보기 ↗</a></div></div></section>
+  </main>
+
+  <footer><div class="wrap footer-inner"><div><span class="brand-mark">R<span class="mark-dot">.</span></span><span>RAG CITATION LAB</span></div><p>가상 문서로 만든 자체 제작 포트폴리오 데모 · 실제 고객 시스템이나 납품 사례가 아닙니다.</p><a href="#top">맨 위로 ↑</a></div></footer>
+</body>
+</html>
