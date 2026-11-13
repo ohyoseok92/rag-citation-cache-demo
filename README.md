@@ -60,3 +60,7 @@ Dragonfly stores the synthetic source documents and their SHA-256 content hash i
 The source update endpoint has no authentication and is for localhost only. Updates use a read-modify-write sequence intended for one writer; simultaneous writers need a transaction or another atomic source-update mechanism. A real ingest pipeline must update the source snapshot for every document change, and production retrieval must search only the same snapshot used in the key. TTL alone cannot guarantee citation correctness. The demo makes no performance claim.
 
 This code uses the Redis-compatible Python client supported by [Dragonfly](https://www.dragonflydb.io/docs) and a TTL-bearing [Redis `SET`](https://redis.io/docs/latest/commands/set/) for answer entries.
+
+## Have a similar citation failure in an existing chatbot?
+
+If a document changed but your existing chatbot still cites the old passage, I offer a [USD 149 diagnosis of one reproducible citation or stale-answer failure](https://payhip.com/b/Llunf). Send a redacted question, the old and current source passages, and any retrieval or answer trace you can safely share through the listing's fit-review form. I will confirm the scope before checkout. The diagnosis documents the observed failure path and a repeatable regression check; code changes are quoted separately. Do not send credentials, personal data, or a production database export. This repository is my own synthetic demo, not a client case study.
