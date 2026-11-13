@@ -64,3 +64,5 @@ This code uses the Redis-compatible Python client supported by [Dragonfly](https
 ## Have a similar citation failure in an existing chatbot?
 
 If a document changed but your existing chatbot still cites the old passage, I offer a [USD 149 diagnosis of one reproducible citation or stale-answer failure](https://payhip.com/b/Llunf). Send a redacted question, the old and current source passages, and any retrieval or answer trace you can safely share through the listing's fit-review form. I will confirm the scope before checkout. The diagnosis documents the observed failure path and a repeatable regression check; code changes are quoted separately. Do not send credentials, personal data, or a production database export. This repository is my own synthetic demo, not a client case study.
+
+To see the handoff format before contacting me, read the [synthetic sample diagnosis report](docs/sample-diagnosis-report.md). It is an illustrative case, not a client result.
