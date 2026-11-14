@@ -66,3 +66,5 @@ This code uses the Redis-compatible Python client supported by [Dragonfly](https
 If a document changed but your existing chatbot still cites the old passage, I offer a [USD 149 diagnosis of one reproducible citation or stale-answer failure](https://payhip.com/b/Llunf). Send a redacted question, the old and current source passages, and any retrieval or answer trace you can safely share through the listing's fit-review form. I will confirm the scope before checkout. The diagnosis documents the observed failure path and a repeatable regression check; code changes are quoted separately. Do not send credentials, personal data, or a production database export. This repository is my own synthetic demo, not a client case study.
 
 To see the handoff format before contacting me, read the [synthetic sample diagnosis report](docs/sample-diagnosis-report.md). It is an illustrative case, not a client result.
+
+한국어로 결과물 형식을 먼저 확인하려면 [합성 사례 진단 보고서](docs/sample-diagnosis-report.ko.md)를 읽어 주세요. 자체 제작 예시이며 실제 고객 납품 실적은 아닙니다.
