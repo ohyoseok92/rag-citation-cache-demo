@@ -68,3 +68,5 @@ If a document changed but your existing chatbot still cites the old passage, I o
 To see the handoff format before contacting me, read the [synthetic sample diagnosis report](docs/sample-diagnosis-report.md). It is an illustrative case, not a client result.
 
 한국어로 결과물 형식을 먼저 확인하려면 [합성 사례 진단 보고서](docs/sample-diagnosis-report.ko.md)를 읽어 주세요. 자체 제작 예시이며 실제 고객 납품 실적은 아닙니다.
+
+국내에서 같은 오류 한 건의 진단이 필요하면 [크몽 RAG 진단(199,000원)](https://kmong.com/gig/864247)에 비식별 예시를 보내 범위를 먼저 확인해 주세요. 코드 수정은 별도 견적입니다.
