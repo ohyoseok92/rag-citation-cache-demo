@@ -4,6 +4,8 @@ This original, synthetic example reproduces a citation correctness bug. An answe
 
 There is no LLM call or external document. The “answer generator” picks the document with the most question-word overlap and quotes its full text. It exists to make cache behavior reproducible, not to demonstrate answer quality or retrieval performance.
 
+> **Seeing a similar failure in your chatbot?** For one reproducible stale answer or incorrect citation, [request a scope review for the USD 149 diagnosis](https://payhip.com/b/Llunf) or [ask in Korean on Kmong (199,000원)](https://kmong.com/gig/864247). Share a redacted example first; I confirm fit before payment. Code changes are quoted separately. This repository is a synthetic demonstration, not a client case study.
+
 ## Interactive browser walkthrough
 
 The complete source for the [public walkthrough](https://rag-citation-lab-oh6428.oh6428.chatgpt.site/) is in [`web-demo/`](web-demo/). It is also shown in the [Wishket portfolio](https://www.wishket.com/partners/p/ohyoseok92/portfolio/322743). The page steps through the same synthetic 30-to-45-day document edit, then compares the stale naive-cache answer with the fresh versioned-cache answer.
